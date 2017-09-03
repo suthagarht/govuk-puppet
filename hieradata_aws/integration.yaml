@@ -122,6 +122,16 @@ govuk::node::s_backup::offsite_backups: true
 govuk::node::s_bouncer::minimum_request_rate: 0.1
 govuk::node::s_cache::real_ip_header: 'X-Forwarded-For'
 govuk::node::s_cache::protect_cache_servers: true
+
+govuk::node::s_docker_worker_frontend::manager_ips:
+  - '10.1.13.20'
+  - '10.1.14.20'
+  - '10.1.15.20'
+govuk::node::s_docker_manager_frontend::manager_ips:
+  - '10.1.13.20'
+  - '10.1.14.20'
+  - '10.1.15.20'
+
 govuk::node::s_licensify_lb::enable_feed_console: true
 govuk::node::s_mirrorer::daily_queue_purge: true
 govuk::node::s_monitoring::offsite_backups: false

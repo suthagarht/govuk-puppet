@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Script to create a cluster. This should only be run when setting up a
+# a brand new cluster.
+#
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
+MANAGER_IP=<%= @ipaddress_eth1 -%>
+
+function create_cluster {
+  echo "Creating Swarm cluster"
+  docker swarm init \
+    --advertise-addr=$MANAGER_IP
+
+  if [[ $? == 0 ]]; then
+    WORKER_TOKEN=$(docker swarm join-token worker -q)
+    MANAGER_TOKEN=$(docker swarm join-token manager -q)
+
+    echo "Created cluster. Please add the following to hieradata:"
+    echo "Worker token: ${WORKER_TOKEN}"
+    echo "Manager token: ${MANAGER_TOKEN}"
+
+    exit 0
+  else
+    echo "Cluster not created!"
+    exit 1
+  fi
+}
+
+if ! docker info 2>/dev/null| grep -qw "Swarm: active"; then
+  create_cluster
+else
+  echo "Already in an active cluster, aborting"
+  exit 1
+fi

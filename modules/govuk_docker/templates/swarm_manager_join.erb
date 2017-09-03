@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Wrapper for adding a manager to a current cluster
+#
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
+if ! docker info 2>/dev/null| grep -qw "Swarm: active"; then
+  echo "Attempting to join cluster:"
+  echo "Checking for active managers to join"
+  for manager in <%= @manager_ips.join(" ") -%>; do
+    docker swarm join \
+      --token <%= @manager_token -%> \
+      $manager:2377
+
+    if [[ $? == 0 ]]; then
+      echo "Successfully joined cluster!"
+      exit 0
+    fi
+  done
+
+  echo "Error: haven't been able to join any clusters"
+  exit 1
+fi
