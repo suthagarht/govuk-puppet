@@ -82,7 +82,13 @@ class govuk::apps::asset_manager(
       client_max_body_size 500m;
 
       proxy_set_header X-Sendfile-Type X-Accel-Redirect;
-      proxy_set_header X-Accel-Mapping /var/apps/asset-manager/uploads/assets/=/raw/;
+      if ($request_uri ~ /media/) {
+        set $x_accel_mapping /var/apps/asset-manager/uploads/assets/=/raw/;
+      }
+      if ($request_uri ~ /government/uploads/) {
+        set $x_accel_mapping /data/uploads/whitehall/clean/=/whitehall-raw/;
+      }
+      proxy_set_header X-Accel-Mapping $x_accel_mapping;
 
       # /raw/(.*) is the path mapping sent from the rails application to
       # nginx and is immediately picked up. /raw/(.*) is not available
@@ -91,6 +97,11 @@ class govuk::apps::asset_manager(
         internal;
         add_header GOVUK-Asset-Manager-File-Store NFS;
         alias /var/apps/asset-manager/uploads/assets/$1;
+      }
+
+      location ~ /whitehall-raw/(.*) {
+        internal;
+        alias /data/uploads/whitehall/clean/$1;
       }
 
       # Store values from Rails response headers for use in the

@@ -1575,7 +1575,7 @@ router::assets_origin::asset_routes:
   '/frontend/': "frontend"
   '/government/assets/': "whitehall-frontend"
   '/government/placeholder': "whitehall-frontend"
-  '/government/uploads/': "whitehall-frontend"
+  '/government/uploads/': "static"
   '/government-frontend/': "government-frontend"
   '/info-frontend/': "info-frontend"
   '/manuals-frontend/': "manuals-frontend"
