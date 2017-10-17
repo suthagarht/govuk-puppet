@@ -25,4 +25,6 @@ class govuk::node::s_docker_worker_frontend (
     require      => Class['::govuk::node::s_docker_base'],
   }
 
+  Govuk_containers::Cluster::App <| tag == frontend |>
+
 }
