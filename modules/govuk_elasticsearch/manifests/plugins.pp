@@ -45,7 +45,6 @@ class govuk_elasticsearch::plugins (
     }
 
     elasticsearch::plugin { 'elasticsearch-migration':
-      module_dir => 'elasticsearch-migration',
       url        => 'https://github.com/elastic/elasticsearch-migration/releases/download/v2.0.4/elasticsearch-migration-2.0.4.zip',
       instances  => $::fqdn,
     }
