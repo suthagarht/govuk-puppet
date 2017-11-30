@@ -88,9 +88,18 @@ class govuk::apps::email_alert_api(
   $db_password = undef,
   $db_hostname = undef,
   $db_name = 'email-alert-api_production',
+  $email_status_updates_alias_enabled = false,
 ) {
 
   if $enabled {
+    $app_domain = hiera('app_domain')
+
+    if $email_status_updates_alias_enabled {
+      $vhost_aliases = ["email-status-updates"]
+    } else {
+      $vhost_aliases = []
+    }
+
     govuk::app { 'email-alert-api':
       app_type           => 'rack',
       port               => $port,
@@ -98,6 +107,7 @@ class govuk::apps::email_alert_api(
       log_format_is_json => true,
       health_check_path  => '/healthcheck',
       json_health_check  => true,
+      vhost_aliases      => $vhost_aliases,
     }
 
     include govuk_postgresql::client #installs libpq-dev package needed for pg gem

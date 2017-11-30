@@ -100,6 +100,7 @@ govuk::apps::content_store::mongodb_nodes: ['localhost']
 govuk::apps::content_store::mongodb_name: 'content_store_development'
 govuk::apps::content_tagger::enable_procfile_worker: false
 govuk::apps::email_alert_api::enable_procfile_worker: false
+govuk::apps::email_alert_api::email_status_updates_alias_enabled: true
 govuk::apps::email_alert_service::rabbitmq_hosts: ['localhost']
 govuk::apps::event_store::enabled: true
 govuk::apps::event_store::mongodb_servers: ['localhost']

@@ -49,6 +49,7 @@ class govuk::node::s_backend_lb (
     'contacts-admin',
     'content-performance-manager',
     'content-tagger',
+    'email-status-updates',
     'imminence',
     'link-checker-api',
     'local-links-manager',
