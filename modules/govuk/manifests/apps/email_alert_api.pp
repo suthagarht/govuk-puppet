@@ -191,5 +191,15 @@ class govuk::apps::email_alert_api(
         value   => 'allow';
       }
     }
+
+    $app_domain = hiera('app_domain')
+
+    nginx::config::vhost::proxy { "email-status-updates.${app_domain}":
+      to               => ["localhost:${port}"],
+      protected        => false,
+      extra_app_config => "
+        proxy_pass http://email-status-updates.${app_domain}-proxy/status-update;
+      ",
+    }
   }
 }
