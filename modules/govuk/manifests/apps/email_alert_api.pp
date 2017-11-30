@@ -9,6 +9,11 @@
 #   Should the application should be enabled. Set in hiera data for each
 #   environment.
 #
+# [*enable_callbacks_proxy*]
+#   Whether to create a public proxy into this application for handling
+#   callbacks from external parties
+#   Default: false
+#
 # [*port*]
 #   What port should the app run on?
 #
@@ -61,9 +66,11 @@
 # [*sentry_dsn*]
 #   The URL used by Sentry to report exceptions
 #
+#
 class govuk::apps::email_alert_api(
   $port = '3088',
   $enabled = false,
+  $enable_callbacks_proxy = false,
   $enable_procfile_worker = true,
   $sidekiq_retry_critical = '20',
   $sidekiq_retry_warning = '10',
@@ -189,6 +196,24 @@ class govuk::apps::email_alert_api(
       govuk::app::envvar { "${title}-ALLOW_GOVDELIVERY_SYNC":
         varname => 'ALLOW_GOVDELIVERY_SYNC',
         value   => 'allow';
+      }
+    }
+
+    $app_domain = hiera('app_domain')
+
+    if $enable_callbacks_proxy {
+      nginx::config::vhost::proxy { "email-alert-api-callbacks.${app_domain}":
+        to               => ["localhost:${port}"],
+        ssl_only         => true,
+        protected        => false,
+        extra_app_config => "
+          return 404;
+        ",
+        extra_config => "
+          location ~ ^/status-updates(/|$) {
+            proxy_pass http://localhost:${port};
+          }
+        "
       }
     }
   }
