@@ -13,13 +13,17 @@
 #   and why the alert might exist. Should link to a section of the
 #   "opsmanual". This will be included in the Nagios UI and email alerts.
 #
+# [*json_file*]
+#   The JSON file of Smokey tests to consume.
+#
 define icinga::check_feature_w_prio (
   $feature,
   $prio,
   $notes_url = undef,
+  $json_file = undef,
 ) {
   icinga::check { "check_feature_${feature}_${prio}_checker":
-    check_command       => "run_smokey_tests!${feature}!${prio}",
+    check_command       => "run_smokey_tests!${feature}!${prio}!${json_file}",
     use                 => "govuk_${prio}_priority",
     service_description => "Run ${feature} ${prio} priority tests",
     host_name           => $::fqdn,

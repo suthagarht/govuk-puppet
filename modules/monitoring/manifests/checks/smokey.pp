@@ -33,4 +33,21 @@ class monitoring::checks::smokey (
 
   create_resources(icinga::check_feature, $features)
 
+  if $::aws_migration {
+    $service_publishing_file = '/etc/init/smokey-publishing-loop.conf'
+
+    # TODO: Should this really run as root?
+    file { $service_publishing_file:
+      ensure  => present,
+      content => template('monitoring/smokey-loop.conf'),
+    }
+
+    service { 'smokey-publishing-loop':
+      ensure   => running,
+      provider => 'upstart',
+      require  => File[$service_publishing_file],
+    }
+    create_resources(icinga::check_feature, $features)
+  }
+
 }
