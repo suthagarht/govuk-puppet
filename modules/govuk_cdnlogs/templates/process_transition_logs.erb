@@ -26,7 +26,7 @@ if [ ! -d "$BUNDLE_DIR" ]; then
 fi
 
 # clone repos
-for REPO in transition-stats pre-transition-stats
+for REPO in transition-stats transition-logs-processing
 do
     if [ -d "./$REPO" ]; then
         cd "$REPO"
@@ -46,7 +46,7 @@ done
 # process logs
 LOGS_DIR='<%= @log_dir -%>'
 
-(cd pre-transition-stats &&
+(cd transition-logs-processing &&
     bundle install --path "$BUNDLE_DIR" &&
     bundle exec bin/hits update "$LOGS_DIR" --output-dir '../transition-stats/hits')
 
