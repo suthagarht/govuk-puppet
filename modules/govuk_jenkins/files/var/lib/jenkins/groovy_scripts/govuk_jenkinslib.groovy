@@ -159,7 +159,6 @@ def buildProject(Map options = [:]) {
 
     stage("Set up content schema dependency") {
       contentSchemaDependency(params.SCHEMA_BRANCH)
-      setEnvar("GOVUK_CONTENT_SCHEMAS_PATH", "tmp/govuk-content-schemas")
     }
 
     stage("bundle install") {
@@ -515,8 +514,8 @@ def contentSchemaDependency(String schemaGitCommit = 'deployed-to-production') {
     sh('git clone git@github.com:alphagov/govuk-content-schemas.git tmp/govuk-content-schemas')
     dir("tmp/govuk-content-schemas") {
       sh("git checkout ${schemaGitCommit}")
+      setEnvar("GOVUK_CONTENT_SCHEMAS_PATH", pwd())
     }
-    env."GOVUK_CONTENT_SCHEMAS_PATH" = "tmp/govuk-content-schemas"
   }
 }
 
