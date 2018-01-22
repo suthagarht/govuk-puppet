@@ -151,4 +151,15 @@ class govuk::node::s_development (
   }
 
   ensure_packages(['wkhtmltopdf'])
+
+  nginx::config::site { 'draft-assets.dev.gov.uk':
+    content => 'server {
+      server_name draft-assets.dev.gov.uk;
+      listen 80;
+      proxy_set_header X-Forwarded-Host $host;
+      location / {
+        proxy_pass http://localhost:3107;
+      }
+    }'
+  }
 }
