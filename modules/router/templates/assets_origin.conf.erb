@@ -50,6 +50,12 @@ server {
 
   <%- end -%>
 
+  location /auth/gds/ {
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header Host asset-manager.dev.gov.uk;
+    proxy_pass http://asset-manager.dev.gov.uk;
+  }
+
   location / {
     proxy_set_header Host static.<%= @app_domain %>;
     proxy_pass <%= @upstream_ssl ? 'https' : 'http' %>://static.<%= @app_domain %>;
